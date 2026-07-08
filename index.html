@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SE2026 - PSLS | Badan Pusat Statistik</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="header-logo">
+        <div class="logo-icon">
+          <!-- BPS themed modern SVG Logo -->
+          <svg viewBox="0 0 100 100" class="svg-logo">
+            <rect x="15" y="15" width="70" height="70" rx="15" fill="#0d47a1"/>
+            <polygon points="50,25 75,65 25,65" fill="#ff9800"/>
+            <circle cx="50" cy="55" r="10" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>36-PSLS</h1>
+          <p>Pemutakhiran Satuan Lingkungan Setempat</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <!-- Connection Status Badge -->
+        <div class="network-badge online" id="network-status">
+          <span class="status-dot"></span>
+          <span class="status-text">Online</span>
+        </div>
+        
+        <!-- Offline Sync Button -->
+        <button id="btn-sync" class="btn btn-accent btn-small btn-sync hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-refresh" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
+          </svg>
+          Sync (<span id="sync-count">0</span>)
+        </button>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Theme">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+        <div class="user-badge" id="user-profile-btn">
+          <div class="avatar">P</div>
+          <span class="username">Petugas BPS</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Bottom Navigation Bar for Mobile, Sidebar for Desktop -->
+    <nav class="app-nav">
+      <button class="nav-item active" data-view="dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+        </svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="form-wizard" id="nav-btn-form">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Isi Form</span>
+      </button>
+      <button class="nav-item" data-view="history-list">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Riwayat</span>
+      </button>
+      <button class="nav-item" data-view="guide-info">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Bantuan</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- ================= VIEW 1: DASHBOARD ================= -->
+      <section id="view-dashboard" class="content-view active">
+        <!-- Stats Cards Container -->
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Total SLS Diinput</span>
+              <h2 class="stat-value" id="stats-total">0</h2>
+            </div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Draft Tersimpan (Lokal)</span>
+              <h2 class="stat-value" id="stats-drafts">0</h2>
+            </div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Selesai (Di Database)</span>
+              <h2 class="stat-value" id="stats-submitted">0</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sync Alert Banner for Offline-First -->
+        <div class="sync-banner hidden" id="sync-banner">
+          <div class="banner-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="banner-text">
+            <h4>Koneksi Internet Terdeteksi!</h4>
+            <p>Ada <span id="banner-count">0</span> data draf lokal yang belum dikirim ke database pusat.</p>
+          </div>
+          <button class="btn btn-accent btn-small" id="btn-sync-banner">Sinkronkan Sekarang</button>
+        </div>
+
+        <!-- Quick Start Card -->
+        <div class="hero-card">
+          <div class="hero-content">
+            <h2>Pemutakhiran SLS Lebih Mudah & Cepat</h2>
+            <p>Gunakan aplikasi mobile-friendly SE2026-PSLS untuk memperbarui batas wilayah, muatan keluarga, bangunan, dan kepemimpinan SLS secara instan di lapangan.</p>
+            <button class="btn btn-primary btn-large start-form-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Mulai Formulir Baru
+            </button>
+          </div>
+          <div class="hero-illustration">
+            <svg viewBox="0 0 200 200" class="svg-illustration">
+              <circle cx="100" cy="100" r="80" fill="var(--color-bg-secondary)"/>
+              <rect x="50" y="40" width="100" height="130" rx="10" fill="var(--color-card-bg)" stroke="var(--color-border)" stroke-width="4"/>
+              <line x1="70" y1="70" x2="130" y2="70" stroke="var(--color-text-primary)" stroke-width="4" stroke-linecap="round"/>
+              <line x1="70" y1="90" x2="110" y2="90" stroke="var(--color-text-secondary)" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="70" cy="120" r="8" fill="var(--color-accent)"/>
+              <line x1="85" y1="120" x2="130" y2="120" stroke="var(--color-text-secondary)" stroke-width="4" stroke-linecap="round"/>
+              <rect x="70" y="140" width="60" height="15" rx="5" fill="var(--color-primary)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Recent Activities / Drafts -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Draft / Riwayat Terbaru</h3>
+            <button class="btn btn-text view-all-history">Lihat Semua</button>
+          </div>
+          <div class="recent-list" id="recent-drafts-container">
+            <!-- Populated via Javascript -->
+            <div class="empty-state">
+              <p>Belum ada data pengisian terbaru.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= VIEW 2: MULTI-STEP FORM ================= -->
+      <section id="view-form-wizard" class="content-view">
+        
+        <!-- Step Progress Indicator — always stays at top, does not scroll -->
+        <div class="form-stepper" id="form-stepper">
+          <div class="step-progress-bar">
+            <div class="step-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="step-nodes">
+            <div class="step-node active" data-step="1" title="Sebelum">1</div>
+            <div class="step-node" data-step="2" title="Setelah (Admin)">2</div>
+            <div class="step-node" data-step="3" title="Setelah (Muatan)">3</div>
+            <div class="step-node" data-step="4" title="Status & Batas">4</div>
+            <div class="step-node" data-step="5" title="Review & TTD">5</div>
+          </div>
+          <div class="step-title" id="current-step-title">Langkah 1: SLS Sebelum Perubahan</div>
+        </div>
+
+        <!-- The Form -->
+        <form id="psls-form" autocomplete="off" novalidate>
+          
+          <!-- STEP 1: SLS Sebelum Perubahan (Kolom 1 - 7) -->
+          <div class="form-step-panel active" data-step="1">
+            <div class="step-intro">
+              <h3>Kondisi SLS Sebelum Perubahan</h3>
+              <p>Masukkan identitas administratif wilayah SLS sesuai data acuan sebelum dilakukan perubahan/pemutakhiran.</p>
+            </div>
+
+            <div class="form-group-grid">
+              <!-- (1) Provinsi -->
+              <div class="form-field">
+                <label for="col1_prov">
+                  (1) Kode Provinsi
+                  <button type="button" class="btn-help-inline" data-help="col1_prov">?</button>
+                </label>
+                <input type="text" id="col1_prov" name="col1_prov" placeholder="Contoh: 32" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka.</span>
+              </div>
+
+              <!-- (2) Kab / Kota -->
+              <div class="form-field">
+                <label for="col2_kab">
+                  (2) Kode Kabupaten / Kota
+                  <button type="button" class="btn-help-inline" data-help="col2_kab">?</button>
+                </label>
+                <input type="text" id="col2_kab" name="col2_kab" placeholder="Contoh: 73" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka.</span>
+              </div>
+
+              <!-- (3) Kecamatan -->
+              <div class="form-field">
+                <label for="col3_kec">
+                  (3) Kode Kecamatan
+                  <button type="button" class="btn-help-inline" data-help="col3_kec">?</button>
+                </label>
+                <input type="text" id="col3_kec" name="col3_kec" placeholder="Contoh: 040" maxlength="3" pattern="\d{3}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 3 digit angka.</span>
+              </div>
+
+              <!-- (4) Desa / Kel -->
+              <div class="form-field">
+                <label for="col4_desa">
+                  (4) Kode Desa / Kelurahan
+                  <button type="button" class="btn-help-inline" data-help="col4_desa">?</button>
+                </label>
+                <input type="text" id="col4_desa" name="col4_desa" placeholder="Contoh: 012" maxlength="3" pattern="\d{3}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 3 digit angka.</span>
+              </div>
+
+              <!-- (5) Kode SLS / Non SLS -->
+              <div class="form-field">
+                <label for="col5_kodesls">
+                  (5) Kode SLS / Non SLS
+                  <button type="button" class="btn-help-inline" data-help="col5_kodesls">?</button>
+                </label>
+                <input type="text" id="col5_kodesls" name="col5_kodesls" placeholder="Contoh: 0010" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
+                <span class="field-helper" id="helper-col5">Jenis SLS: -</span>
+                <span class="field-error">Harus diisi dengan 4 digit angka.</span>
+              </div>
+
+              <!-- (6) Sub SLS -->
+              <div class="form-field">
+                <label for="col6_subsls">
+                  (6) Kode Sub SLS
+                  <button type="button" class="btn-help-inline" data-help="col6_subsls">?</button>
+                </label>
+                <input type="text" id="col6_subsls" name="col6_subsls" placeholder="Contoh: 00" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka (00 jika tidak ada).</span>
+              </div>
+
+              <!-- (7) Nama SLS Lengkap -->
+              <div class="form-field full-width">
+                <label for="col7_namasls">
+                  (7) Nama SLS Lengkap Sebelum Perubahan
+                  <button type="button" class="btn-help-inline" data-help="col7_namasls">?</button>
+                </label>
+                <input type="text" id="col7_namasls" name="col7_namasls" placeholder="Format: RT [No] RW [No] [Nama Dusun/Lingkungan]" required>
+                <span class="field-error">Harus diisi lengkap (contoh: RT 01 RW 02 Dusun Margomulyo).</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- STEP 2: SLS Setelah Perubahan - Administrasi (Kolom 8 - 14) -->
+          <div class="form-step-panel" data-step="2">
+            <div class="step-intro">
+              <h3>Kondisi SLS Setelah Perubahan (Administrasi)</h3>
+              <p>Tentukan identitas administratif setelah dilakukan verifikasi lapangan. Klik tombol di bawah jika tidak ada perubahan batas administratif.</p>
+              
+              <button type="button" class="btn btn-secondary btn-small" id="btn-copy-prev">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                </svg>
+                Salin dari Sebelum Perubahan
+              </button>
+            </div>
+
+            <div class="form-group-grid">
+              <!-- (8) Provinsi setelah -->
+              <div class="form-field">
+                <label for="col8_prov">
+                  (8) Kode Provinsi setelah
+                  <button type="button" class="btn-help-inline" data-help="col8_prov">?</button>
+                </label>
+                <input type="text" id="col8_prov" name="col8_prov" placeholder="Contoh: 32" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka.</span>
+              </div>
+
+              <!-- (9) Kab / Kota setelah -->
+              <div class="form-field">
+                <label for="col9_kab">
+                  (9) Kode Kabupaten / Kota setelah
+                  <button type="button" class="btn-help-inline" data-help="col9_kab">?</button>
+                </label>
+                <input type="text" id="col9_kab" name="col9_kab" placeholder="Contoh: 73" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka.</span>
+              </div>
+
+              <!-- (10) Kecamatan setelah -->
+              <div class="form-field">
+                <label for="col10_kec">
+                  (10) Kode Kecamatan setelah
+                  <button type="button" class="btn-help-inline" data-help="col10_kec">?</button>
+                </label>
+                <input type="text" id="col10_kec" name="col10_kec" placeholder="Contoh: 040" maxlength="3" pattern="\d{3}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 3 digit angka.</span>
+              </div>
+
+              <!-- (11) Desa / Kel setelah -->
+              <div class="form-field">
+                <label for="col11_desa">
+                  (11) Kode Desa / Kelurahan setelah
+                  <button type="button" class="btn-help-inline" data-help="col11_desa">?</button>
+                </label>
+                <input type="text" id="col11_desa" name="col11_desa" placeholder="Contoh: 012" maxlength="3" pattern="\d{3}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 3 digit angka.</span>
+              </div>
+
+              <!-- (12) Nama Desa / Kelurahan -->
+              <div class="form-field full-width">
+                <label for="col12_namadesa">
+                  (12) Nama Desa / Kelurahan
+                  <button type="button" class="btn-help-inline" data-help="col12_namadesa">?</button>
+                </label>
+                <input type="text" id="col12_namadesa" name="col12_namadesa" placeholder="Contoh: Margomulyo" required>
+                <span class="field-error">Harus diisi nama desa/kelurahan yang sah.</span>
+              </div>
+
+              <!-- (13) Kode SLS / Non SLS setelah -->
+              <div class="form-field">
+                <label for="col13_kodesls">
+                  (13) Kode SLS / Non SLS setelah
+                  <button type="button" class="btn-help-inline" data-help="col13_kodesls">?</button>
+                </label>
+                <input type="text" id="col13_kodesls" name="col13_kodesls" placeholder="Contoh: 0010" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
+                <span class="field-helper" id="helper-col13">Jenis SLS: -</span>
+                <span class="field-error">Harus diisi dengan 4 digit angka.</span>
+              </div>
+
+              <!-- (14) Sub SLS setelah -->
+              <div class="form-field">
+                <label for="col14_subsls">
+                  (14) Kode Sub SLS setelah
+                  <button type="button" class="btn-help-inline" data-help="col14_subsls">?</button>
+                </label>
+                <input type="text" id="col14_subsls" name="col14_subsls" placeholder="Contoh: 00" maxlength="2" pattern="\d{2}" inputmode="numeric" required>
+                <span class="field-error">Harus diisi dengan 2 digit angka (00 jika tidak ada).</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- STEP 3: SLS Setelah Perubahan - Muatan SLS (Kolom 15 - 22) -->
+          <div class="form-step-panel" data-step="3">
+            <div class="step-intro">
+              <h3>Kondisi SLS Setelah Perubahan (Muatan SLS)</h3>
+              <p>Isi data muatan kependudukan dan bangunan berdasarkan kondisi riil setelah pemutakhiran.</p>
+            </div>
+
+            <div class="form-group-grid">
+              <!-- (15) Muatan Dominan -->
+              <div class="form-field full-width">
+                <label for="col15_muatandominan">
+                  (15) Muatan Dominan
+                  <button type="button" class="btn-help-inline" data-help="col15_muatandominan">?</button>
+                </label>
+                <select id="col15_muatandominan" name="col15_muatandominan" required>
+                  <option value="" disabled selected>-- Pilih Muatan Dominan --</option>
+                  <option value="1">Permukiman Biasa</option>
+                  <option value="2">Permukiman Mewah / Elite / Real Estate</option>
+                  <option value="3">Permukiman Kumuh</option>
+                  <option value="4">Apartemen / Kondominium / Flat</option>
+                  <option value="5">Kos-kosan / Kontrakan</option>
+                  <option value="6">Pesantren / Barak / Asrama / Seminari</option>
+                  <option value="7">Tidak Digunakan</option>
+                  <option value="8">Pusat Perbelanjaan Modern / Mall / Pertokoan / Pasar</option>
+                  <option value="9">Kawasan Industri / Sentra Industri</option>
+                  <option value="10">Hotel / Tempat Rekreasi</option>
+                  <option value="11">Wilayah Tidak Berpenghuni (Hutan, Kebun, Pulau Kosong, dll)</option>
+                  <option value="12">Perkantoran</option>
+                  <option value="13">Pelabuhan / Bandara / Terminal Bus / Stasiun</option>
+                </select>
+                <span class="field-error">Wajib memilih salah satu opsi.</span>
+              </div>
+
+              <!-- (16) Jumlah KK -->
+              <div class="form-field">
+                <label for="col16_kk">
+                  (16) Jumlah KK (Kepala Keluarga)
+                  <button type="button" class="btn-help-inline" data-help="col16_kk">?</button>
+                </label>
+                <input type="number" id="col16_kk" name="col16_kk" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0.</span>
+              </div>
+
+              <!-- (17) Jumlah BTT -->
+              <div class="form-field">
+                <label for="col17_btt">
+                  (17) Jumlah BTT (Bangunan Tempat Tinggal)
+                  <button type="button" class="btn-help-inline" data-help="col17_btt">?</button>
+                </label>
+                <input type="number" id="col17_btt" name="col17_btt" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0.</span>
+              </div>
+
+              <!-- (18) Jumlah BBTT -->
+              <div class="form-field">
+                <label for="col18_bbtt">
+                  (18) Jumlah BBTT (Bukan Tempat Tinggal)
+                  <button type="button" class="btn-help-inline" data-help="col18_bbtt">?</button>
+                </label>
+                <input type="number" id="col18_bbtt" name="col18_bbtt" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0.</span>
+              </div>
+
+              <!-- (19) Jumlah BTT Kosong -->
+              <div class="form-field">
+                <label for="col19_bttkosong">
+                  (19) Jumlah BTT Kosong
+                  <button type="button" class="btn-help-inline" data-help="col19_bttkosong">?</button>
+                </label>
+                <input type="number" id="col19_bttkosong" name="col19_bttkosong" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0.</span>
+              </div>
+
+              <!-- (20) Jumlah BKU -->
+              <div class="form-field">
+                <label for="col20_bku">
+                  (20) Jumlah BKU (Bangunan Khusus/Lain)
+                  <button type="button" class="btn-help-inline" data-help="col20_bku">?</button>
+                </label>
+                <input type="number" id="col20_bku" name="col20_bku" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0.</span>
+              </div>
+
+              <!-- (21) Jumlah Ruta -->
+              <div class="form-field">
+                <label for="col21_ruta">
+                  (21) Jumlah Ruta (Rumah Tangga)
+                  <button type="button" class="btn-help-inline" data-help="col21_ruta">?</button>
+                </label>
+                <input type="number" id="col21_ruta" name="col21_ruta" placeholder="0" min="0" required>
+                <span class="field-error">Harus angka >= 0 (biasanya mendekati jumlah KK).</span>
+              </div>
+
+              <!-- (22) Nama SLS Lengkap setelah -->
+              <div class="form-field full-width">
+                <label for="col22_namasls">
+                  (22) Nama SLS Lengkap Setelah Perubahan
+                  <button type="button" class="btn-help-inline" data-help="col22_namasls">?</button>
+                </label>
+                <input type="text" id="col22_namasls" name="col22_namasls" placeholder="Format: RT [No] RW [No] [Nama Dusun/Lingkungan] Baru" required>
+                <div class="action-suggestions">
+                  <button type="button" class="btn btn-text btn-small-link" id="btn-copy-name">Salin Nama SLS Lama</button>
+                </div>
+                <span class="field-error">Harus diisi lengkap.</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- STEP 4: Keterangan Ketua SLS & Perubahan Wilayah (Kolom 23 - 25) -->
+          <div class="form-step-panel" data-step="4">
+            <div class="step-intro">
+              <h3>Keterangan Ketua & Perubahan Wilayah SLS</h3>
+              <p>Berikan data ketua SLS terkecil yang bertugas saat ini serta status perubahan secara administratif.</p>
+            </div>
+
+            <div class="form-group-grid">
+              <!-- (23) Ketua SLS (Terkecil) -->
+              <div class="form-field full-width">
+                <label for="col23_ketuasls">
+                  (23) Nama Ketua SLS (Terkecil/Tingkat RT)
+                  <button type="button" class="btn-help-inline" data-help="col23_ketuasls">?</button>
+                </label>
+                <input type="text" id="col23_ketuasls" name="col23_ketuasls" placeholder="Nama lengkap Ketua RT / Kepala Dusun" required>
+                <span class="field-error">Harus diisi nama Ketua SLS.</span>
+              </div>
+
+              <!-- (24) Status Perubahan Wilayah SLS -->
+              <div class="form-field full-width">
+                <label for="col24_statusperubahan">
+                  (24) Status Perubahan Wilayah SLS
+                  <button type="button" class="btn-help-inline" data-help="col24_statusperubahan">?</button>
+                </label>
+                <select id="col24_statusperubahan" name="col24_statusperubahan" required>
+                  <option value="" disabled selected>-- Pilih Status Perubahan --</option>
+                  <option value="1">Pemekaran SLS</option>
+                  <option value="2">Penggabungan SLS</option>
+                  <option value="3">Perubahan Jenis SLS</option>
+                  <option value="4">Perubahan Tingkatan/Nama SLS</option>
+                  <option value="5">Perubahan Kode SLS</option>
+                  <option value="6">Perubahan Muatan SLS (Perubahan Nama Ketua SLS)</option>
+                  <option value="0">Tidak Ada Perubahan / Lainnya</option>
+                </select>
+                <span class="field-error">Wajib memilih salah satu opsi.</span>
+              </div>
+
+              <!-- (25) Apakah terdapat perubahan batas? -->
+              <div class="form-field full-width">
+                <label>
+                  (25) Apakah terdapat perubahan batas?
+                  <button type="button" class="btn-help-inline" data-help="col25_perubahanbatas">?</button>
+                </label>
+                <div class="radio-card-group">
+                  <label class="radio-card">
+                    <input type="radio" name="col25_perubahanbatas" value="1" required>
+                    <div class="radio-card-content">
+                      <span class="radio-custom"></span>
+                      <div class="radio-text">
+                        <span class="radio-title">Ya (1)</span>
+                        <span class="radio-desc">Ada perubahan batas fisik wilayah SLS</span>
+                      </div>
+                    </div>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="col25_perubahanbatas" value="2" required>
+                    <div class="radio-card-content">
+                      <span class="radio-custom"></span>
+                      <div class="radio-text">
+                        <span class="radio-title">Tidak (2)</span>
+                        <span class="radio-desc">Batas wilayah SLS tetap seperti semula</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                <span class="field-error">Wajib memilih salah satu.</span>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- STEP 5: Review & Tanda Tangan (Verifikasi & TTD) -->
+          <div class="form-step-panel" data-step="5">
+            <div class="step-intro">
+              <h3>Verifikasi Data & Tanda Tangan</h3>
+              <p>Tinjau kembali data yang telah dimasukkan sebelum disimpan secara permanen. Lakukan tanda tangan digital untuk verifikasi petugas.</p>
+            </div>
+
+            <!-- Summary Table for Review -->
+            <div class="review-container">
+              <h4 class="review-title">Ringkasan Pengisian SE2026-PSLS</h4>
+              
+              <div class="review-section">
+                <h5>1. Administrasi Sebelum Perubahan (Kolom 1 - 7)</h5>
+                <div class="review-grid">
+                  <div class="review-item"><span class="lbl">Prov / Kab / Kec / Desa:</span> <strong id="rev-before-admin">-</strong></div>
+                  <div class="review-item"><span class="lbl">Kode SLS / Sub SLS:</span> <strong id="rev-before-code">-</strong></div>
+                  <div class="review-item full"><span class="lbl">Nama SLS Lengkap:</span> <strong id="rev-before-name">-</strong></div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h5>2. Administrasi Setelah Perubahan (Kolom 8 - 14)</h5>
+                <div class="review-grid">
+                  <div class="review-item"><span class="lbl">Prov / Kab / Kec / Desa / Nama Desa:</span> <strong id="rev-after-admin">-</strong></div>
+                  <div class="review-item"><span class="lbl">Kode SLS / Sub SLS:</span> <strong id="rev-after-code">-</strong></div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h5>3. Muatan SLS Setelah Perubahan (Kolom 15 - 22)</h5>
+                <div class="review-grid">
+                  <div class="review-item"><span class="lbl">Muatan Dominan:</span> <strong id="rev-muatan-dominan">-</strong></div>
+                  <div class="review-item full"><span class="lbl">Nama SLS Baru:</span> <strong id="rev-after-name">-</strong></div>
+                  <div class="review-item"><span class="lbl">KK / Ruta:</span> <strong id="rev-kk-ruta">-</strong></div>
+                  <div class="review-item"><span class="lbl">Bangunan (BTT / BBTT):</span> <strong id="rev-bangunan">-</strong></div>
+                  <div class="review-item"><span class="lbl">BTT Kosong / BKU:</span> <strong id="rev-btt-bku">-</strong></div>
+                </div>
+              </div>
+
+              <div class="review-section">
+                <h5>4. Kepemimpinan & Status Perubahan (Kolom 23 - 25)</h5>
+                <div class="review-grid">
+                  <div class="review-item"><span class="lbl">Ketua SLS:</span> <strong id="rev-ketua">-</strong></div>
+                  <div class="review-item"><span class="lbl">Status Perubahan:</span> <strong id="rev-status-perubahan">-</strong></div>
+                  <div class="review-item"><span class="lbl">Ada Perubahan Batas?:</span> <strong id="rev-perubahan-batas">-</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Petugas & Pengawas Identity Fields -->
+            <div class="form-group-grid margin-top">
+              <div class="form-field">
+                <label for="officer_name">Nama Petugas Lapangan</label>
+                <input type="text" id="officer_name" name="officer_name" placeholder="Nama Petugas Pengisi" required>
+                <span class="field-error">Wajib diisi.</span>
+              </div>
+              <div class="form-field">
+                <label for="officer_date">Tanggal Pengisian</label>
+                <input type="date" id="officer_date" name="officer_date" required>
+                <span class="field-error">Wajib diisi.</span>
+              </div>
+              <div class="form-field">
+                <label for="supervisor_name">Nama Pengawas / Pemeriksa</label>
+                <input type="text" id="supervisor_name" name="supervisor_name" placeholder="Nama Pengawas" required>
+                <span class="field-error">Wajib diisi.</span>
+              </div>
+              <div class="form-field">
+                <label for="supervisor_date">Tanggal Pemeriksaan</label>
+                <input type="date" id="supervisor_date" name="supervisor_date" required>
+                <span class="field-error">Wajib diisi.</span>
+              </div>
+            </div>
+
+            <!-- Signature Pads — Premium Version -->
+            <div class="sig-section-wrapper">
+
+              <!-- Official Stamp Header -->
+              <div class="sig-official-header">
+                <div class="sig-official-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="sig-official-title">Pernyataan & Tanda Tangan Resmi</div>
+                  <div class="sig-official-sub">Formulir SE2026 — Pemutakhiran Satuan Lingkungan Setempat</div>
+                </div>
+              </div>
+
+              <!-- Ink Color Selector -->
+              <div class="sig-ink-selector">
+                <span class="sig-ink-label">Warna Tinta:</span>
+                <button type="button" class="ink-color-btn active" data-color="#1e3a8a" style="background:#1e3a8a" title="Biru Resmi" id="ink-blue"></button>
+                <button type="button" class="ink-color-btn" data-color="#1e293b" style="background:#1e293b" title="Hitam" id="ink-black"></button>
+                <button type="button" class="ink-color-btn" data-color="#7f1d1d" style="background:#7f1d1d" title="Merah" id="ink-red"></button>
+              </div>
+
+              <!-- Two Signature Pads Side by Side -->
+              <div class="signature-section-grid">
+
+                <!-- Officer Pad -->
+                <div class="sig-pad-card" id="sig-card-officer">
+                  <div class="sig-pad-header">
+                    <div class="sig-pad-label">
+                      <span class="sig-pad-number">1</span>
+                      Tanda Tangan Petugas
+                    </div>
+                    <div class="sig-status-dot empty" id="sig-status-officer" title="Belum ditandatangani"></div>
+                  </div>
+                  <div class="canvas-wrapper" id="canvas-wrapper-officer">
+                    <div class="canvas-lines"></div>
+                    <div class="canvas-placeholder" id="canvas-placeholder-officer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                      </svg>
+                      <span>Tanda tangani di sini</span>
+                    </div>
+                    <canvas id="sig-pad-officer" width="400" height="160"></canvas>
+                  </div>
+                  <div class="sig-pad-footer">
+                    <div class="sig-name-line">
+                      <input type="text" id="officer_sig_name" placeholder="Nama jelas Petugas..." class="sig-name-input" autocomplete="name">
+                    </div>
+                    <button type="button" class="btn-clear-sig" id="btn-clear-sig-officer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Supervisor Pad -->
+                <div class="sig-pad-card" id="sig-card-supervisor">
+                  <div class="sig-pad-header">
+                    <div class="sig-pad-label">
+                      <span class="sig-pad-number">2</span>
+                      Tanda Tangan Pengawas
+                    </div>
+                    <div class="sig-status-dot empty" id="sig-status-supervisor" title="Belum ditandatangani"></div>
+                  </div>
+                  <div class="canvas-wrapper" id="canvas-wrapper-supervisor">
+                    <div class="canvas-lines"></div>
+                    <div class="canvas-placeholder" id="canvas-placeholder-supervisor">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                      </svg>
+                      <span>Tanda tangani di sini</span>
+                    </div>
+                    <canvas id="sig-pad-supervisor" width="400" height="160"></canvas>
+                  </div>
+                  <div class="sig-pad-footer">
+                    <div class="sig-name-line">
+                      <input type="text" id="supervisor_sig_name" placeholder="Nama jelas Pengawas..." class="sig-name-input" autocomplete="name">
+                    </div>
+                    <button type="button" class="btn-clear-sig" id="btn-clear-sig-supervisor">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+
+              </div><!-- end .signature-section-grid -->
+
+              <!-- Legal Declaration Checkbox -->
+              <div class="sig-declaration-box" id="sig-declaration">
+                <label class="declaration-label" for="chk-declaration">
+                  <input type="checkbox" id="chk-declaration" name="chk_declaration">
+                  <span class="declaration-custom-check">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span class="declaration-text">
+                    Saya yang bertanda tangan di atas menyatakan bahwa seluruh data yang diisikan dalam formulir ini adalah <strong>benar, akurat, dan dapat dipertanggungjawabkan</strong> sesuai kondisi lapangan yang sebenarnya.
+                  </span>
+                </label>
+              </div>
+
+              <!-- Official Timestamp Footer -->
+              <div class="sig-timestamp-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span id="sig-timestamp-text">Waktu pengisian: —</span>
+              </div>
+
+            </div><!-- end .sig-section-wrapper -->
+
+
+          </div>
+
+          <!-- Wizard Footer Controls -->
+          <div class="form-wizard-footer">
+            <button type="button" class="btn btn-secondary" id="btn-wizard-prev" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              Kembali
+            </button>
+            <div class="footer-center-actions">
+              <button type="button" class="btn btn-text" id="btn-save-draft">
+                Simpan Draft
+              </button>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-wizard-next">
+              Lanjut
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button type="submit" class="btn btn-success" id="btn-wizard-submit" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Kirim Ke Database
+            </button>
+          </div>
+
+        </form>
+
+      </section>
+
+
+      <!-- ================= VIEW 3: HISTORY & EXPORT ================= -->
+      <section id="view-history-list" class="content-view">
+        <div class="view-header">
+          <div>
+            <h3>Daftar Riwayat Formulir</h3>
+            <p>Kelola data survei yang tersimpan di perangkat lokal maupun database server MySQL.</p>
+          </div>
+          <div class="header-buttons">
+            <button class="btn btn-secondary btn-small" id="btn-export-all">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Ekspor CSV
+            </button>
+            <button class="btn btn-secondary btn-small" id="btn-import-trigger">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              Impor JSON
+            </button>
+            <input type="file" id="import-file-input" accept=".json" style="display: none;">
+          </div>
+        </div>
+
+        <div class="search-filter-bar">
+          <div class="search-input-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-search" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="history-search" placeholder="Cari berdasarkan nama SLS, desa, atau ketua...">
+          </div>
+        </div>
+
+        <!-- History Content Grid/Cards -->
+        <div class="history-list-cards" id="history-items-container">
+          <!-- Populated via Javascript -->
+        </div>
+      </section>
+
+
+      <!-- ================= VIEW 4: BANTUAN / PANDUAN PENGISIAN ================= -->
+      <section id="view-guide-info" class="content-view">
+        <div class="view-header">
+          <h3>Panduan Pengisian Kolom 1 - 25</h3>
+          <p>Penjelasan lengkap setiap kolom formulir SE2026-PSLS berdasarkan SOP Badan Pusat Statistik.</p>
+        </div>
+
+        <div class="guide-tabs">
+          <button class="guide-tab-btn active" data-tab="tab-sebelum">Kondisi Sebelum</button>
+          <button class="guide-tab-btn" data-tab="tab-setelah">Kondisi Setelah</button>
+          <button class="guide-tab-btn" data-tab="tab-jenis-sls">Aturan Kode & Jenis</button>
+        </div>
+
+        <div class="guide-tab-content active" id="tab-sebelum">
+          <div class="guide-card">
+            <h4>Kolom (1) s.d (4) - Batas Administrasi</h4>
+            <p>Masukkan kode wilayah administrasi resmi berdasarkan database BPS:</p>
+            <ul>
+              <li><strong>(1) Provinsi:</strong> 2 digit kode provinsi.</li>
+              <li><strong>(2) Kabupaten/Kota:</strong> 2 digit kode kabupaten/kota.</li>
+              <li><strong>(3) Kecamatan:</strong> 3 digit kode kecamatan.</li>
+              <li><strong>(4) Desa/Kelurahan:</strong> 3 digit kode desa/kelurahan.</li>
+            </ul>
+          </div>
+          <div class="guide-card">
+            <h4>Kolom (5) s.d (7) - Identitas SLS</h4>
+            <ul>
+              <li><strong>(5) Kode SLS/Non-SLS:</strong> 4 digit kode SLS yang teridentifikasi.</li>
+              <li><strong>(6) Kode Sub SLS:</strong> 2 digit sub-SLS jika terdapat pecahan SLS (biasanya '00' jika utuh).</li>
+              <li><strong>(7) Nama SLS Lengkap:</strong> Nama lengkap tingkat terbawah dari wilayah SLS tersebut (Contoh: <em>RT 03 RW 05 Dusun Krajan Satu</em>).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="guide-tab-content" id="tab-setelah">
+          <div class="guide-card">
+            <h4>Kolom (8) s.d (14) - Administrasi Setelah Pemutakhiran</h4>
+            <p>Diisi dengan kode-kode administrasi hasil verifikasi lapangan terkini:</p>
+            <ul>
+              <li><strong>(12) Nama Desa / Kelurahan:</strong> Ketikkan nama desa secara tekstual lengkap.</li>
+              <li><strong>(13) Kode SLS Setelah:</strong> Kode 4 digit terbaru.</li>
+              <li><strong>(14) Kode Sub SLS Setelah:</strong> Kode 2 digit sub SLS terbaru.</li>
+            </ul>
+          </div>
+          <div class="guide-card">
+            <h4>Kolom (15) - Muatan Dominan</h4>
+            <p>Pilih peruntukan dominan wilayah SLS tersebut (pilihan 1 sampai 13). Permukiman biasa kode 1, kawasan perkantoran kode 12, wilayah tidak berpenghuni kode 11, dsb.</p>
+          </div>
+          <div class="guide-card">
+            <h4>Kolom (16) s.d (22) - Muatan & Nama SLS setelah</h4>
+            <ul>
+              <li><strong>(16) Jumlah KK:</strong> Banyaknya Kartu Keluarga riil.</li>
+              <li><strong>(17) Jumlah BTT:</strong> Bangunan Tempat Tinggal yang aktif.</li>
+              <li><strong>(18) Jumlah BBTT:</strong> Bangunan Bukan Tempat Tinggal (masjid, toko, ruko yang tidak dihuni).</li>
+              <li><strong>(19) Jumlah BTT Kosong:</strong> Bangunan rumah yang kosong/belum dihuni.</li>
+              <li><strong>(20) Jumlah BKU:</strong> Bangunan Khusus/Lainnya.</li>
+              <li><strong>(21) Jumlah Ruta:</strong> Jumlah Rumah Tangga riil hasil sensus/pemutakhiran.</li>
+              <li><strong>(22) Nama SLS Lengkap:</strong> Nama SLS setelah perubahan.</li>
+            </ul>
+          </div>
+          <div class="guide-card">
+            <h4>Kolom (23) s.d (25) - Kepemimpinan & Perubahan</h4>
+            <ul>
+              <li><strong>(23) Ketua SLS:</strong> Nama lengkap ketua tingkat terbawah (Ketua RT / RW).</li>
+              <li><strong>(24) Status Perubahan Wilayah:</strong> Kode perubahan (1. Pemekaran, 2. Penggabungan, 3. Perubahan Jenis, 4. Perubahan Nama, 5. Perubahan Kode, 6. Perubahan Ketua, 0. Tidak ada perubahan).</li>
+              <li><strong>(25) Perubahan Batas:</strong> Kode 1 (Ya) jika batas wilayah fisik bertambah/berkurang, kode 2 (Tidak) jika batas tetap sama.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="guide-tab-content" id="tab-jenis-sls">
+          <div class="guide-card">
+            <h4>Aturan Kode Jenis SLS (Digit Pertama Kolom 5 & 13)</h4>
+            <p>Digit pertama dari Kode SLS (4 digit) menunjukkan karakteristik fisik wilayah tersebut:</p>
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>Digit</th>
+                  <th>Jenis SLS</th>
+                  <th>Deskripsi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>0</strong></td>
+                  <td>Wilayah SLS</td>
+                  <td>RT/RW, Dusun, atau Lingkungan resmi berpola permukiman.</td>
+                </tr>
+                <tr>
+                  <td><strong>1</strong></td>
+                  <td>Vegetasi Pertanian</td>
+                  <td>Hutan tanaman industri, sawah, perkebunan luas.</td>
+                </tr>
+                <tr>
+                  <td><strong>2</strong></td>
+                  <td>Vegetasi Non-Pertanian</td>
+                  <td>Hutan lindung, savana alami, semak belukar.</td>
+                </tr>
+                <tr>
+                  <td><strong>3</strong></td>
+                  <td>Lahan Terbuka</td>
+                  <td>Gurun, rawa terbuka, lahan bekas tambang, dll.</td>
+                </tr>
+                <tr>
+                  <td><strong>4</strong></td>
+                  <td>Terbangun Permukiman</td>
+                  <td>Kompleks perumahan baru non-SLS resmi, asrama.</td>
+                </tr>
+                <tr>
+                  <td><strong>5</strong></td>
+                  <td>Terbangun Non-Permukiman</td>
+                  <td>Kawasan industri, perkantoran pemerintah, bandara.</td>
+                </tr>
+                <tr>
+                  <td><strong>6</strong></td>
+                  <td>Wilayah Perairan</td>
+                  <td>Danau, teluk, waduk besar, laut.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Help Modal / Popup Dialog for inline ? buttons -->
+    <div class="modal" id="help-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="help-modal-title">Penjelasan Kolom</h4>
+          <button type="button" class="btn-close-modal" id="btn-close-help-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="help-modal-body">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="btn-close-help-modal-ok">Mengerti</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
